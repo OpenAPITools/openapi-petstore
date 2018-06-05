@@ -27,10 +27,10 @@ public class PetRepository extends HashMapRepository<Pet, Long> {
         return super.save(pet);
     }
 
-    public List<Pet> findPetsByStatus(List<String> status) {
+    public List<Pet> findPetsByStatus(List<Pet.StatusEnum> statusList) {
         return entities.values().stream()
                 .filter(entity -> entity.getStatus() != null)
-                .filter(entity -> status.contains(entity.getStatus().toString()))
+                .filter(entity -> statusList.contains(entity.getStatus()))
                 .collect(Collectors.toList());
     }
 

@@ -48,7 +48,8 @@ public class OpenAPI2SpringBoot implements CommandLineRunner {
 
             @Override
             public void addResourceHandlers(ResourceHandlerRegistry registry) {
-                registry.addResourceHandler("/swagger-ui/**").addResourceLocations("classpath:/META-INF/resources/webjars/swagger-ui/3.14.2/");
+                registry.addResourceHandler("/swagger-ui/**")
+                        .addResourceLocations("classpath:/META-INF/resources/webjars/swagger-ui/3.14.2/");
             }
         };
     }

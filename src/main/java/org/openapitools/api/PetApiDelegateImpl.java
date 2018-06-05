@@ -18,7 +18,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 @Service
 public class PetApiDelegateImpl implements PetApiDelegate {
@@ -75,8 +77,13 @@ public class PetApiDelegateImpl implements PetApiDelegate {
     }
 
     @Override
-    public ResponseEntity<List<Pet>> findPetsByStatus(List<String> status) {
-        return ResponseEntity.ok(petRepository.findPetsByStatus(status));
+    public ResponseEntity<List<Pet>> findPetsByStatus(List<String> statusList) {
+        List<Pet.StatusEnum> statusEnums = statusList.stream()
+                .map(s -> Optional.ofNullable(Pet.StatusEnum.fromValue(s))
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid status: " + s))
+                )
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(petRepository.findPetsByStatus(statusEnums));
     }
 
     @Override
