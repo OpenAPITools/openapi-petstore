@@ -7,6 +7,7 @@ import org.openapitools.repository.PetRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.PostConstruct;
@@ -21,9 +22,12 @@ public class StoreApiDelegateImpl implements StoreApiDelegate {
 
     private final PetRepository petRepository;
 
-    public StoreApiDelegateImpl(OrderRepository orderRepository, PetRepository petRepository) {
+    private final NativeWebRequest request;
+
+    public StoreApiDelegateImpl(OrderRepository orderRepository, PetRepository petRepository, NativeWebRequest request) {
         this.orderRepository = orderRepository;
         this.petRepository = petRepository;
+        this.request = request;
     }
 
     @PostConstruct
@@ -51,6 +55,7 @@ public class StoreApiDelegateImpl implements StoreApiDelegate {
 
     @Override
     public ResponseEntity<Map<String, Integer>> getInventory() {
+        ApiUtil.checkApiKey(request);
         return ResponseEntity.ok(petRepository.findAll().stream()
                 .map(Pet::getStatus)
                 .collect(Collectors.groupingBy(Pet.StatusEnum::toString, Collectors.reducing(0, e -> 1, Integer::sum))));
