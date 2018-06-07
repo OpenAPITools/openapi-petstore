@@ -1,17 +1,13 @@
 package org.openapitools.configuration;
 
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.Resource;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.v3.core.util.Json;
+import io.swagger.v3.core.util.Yaml;
+import io.swagger.v3.oas.models.OpenAPI;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StreamUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 
 /**
  * Home redirection to OpenAPI api documentation
@@ -19,16 +15,10 @@ import java.nio.charset.Charset;
 @Controller
 public class HomeController {
 
-    private static YAMLMapper yamlMapper = new YAMLMapper();
+    private final OpenAPI openAPI;
 
-    @Value("classpath:/openapi.yaml")
-    private Resource openapi;
-
-    @Bean
-    public String openapiContent() throws IOException {
-        try(InputStream is = openapi.getInputStream()) {
-            return StreamUtils.copyToString(is, Charset.defaultCharset());
-        }
+    public HomeController(OpenAPI openAPI) {
+        this.openAPI = openAPI;
     }
 
     @RequestMapping("/")
@@ -36,16 +26,16 @@ public class HomeController {
         return "redirect:swagger-ui/index.html?url=../openapi.json";
     }
 
-    @RequestMapping(value = "/openapi.yaml", produces = "application/vnd.oai.openapi")
+    @GetMapping(value = "/openapi.yaml", produces = "application/vnd.oai.openapi")
     @ResponseBody
-    public String openapiYaml() throws IOException {
-        return openapiContent();
+    public String openapiYaml() throws JsonProcessingException {
+        return Yaml.mapper().writeValueAsString(openAPI);
     }
 
-    @RequestMapping(value = "/openapi.json", produces = "application/json")
+    @GetMapping(value = "/openapi.json", produces = "application/vnd.oai.openapi+json")
     @ResponseBody
-    public Object openapiJson() throws IOException {
-        return yamlMapper.readValue(openapiContent(), Object.class);
+    public String openapiJson() throws JsonProcessingException {
+        return Json.mapper().writeValueAsString(openAPI);
     }
 
 }
