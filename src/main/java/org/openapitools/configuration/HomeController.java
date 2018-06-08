@@ -21,21 +21,21 @@ public class HomeController {
         this.openAPI = openAPI;
     }
 
-    @RequestMapping("/")
-    public String index() {
-        return "redirect:swagger-ui/index.html?url=../openapi.json";
-    }
-
     @GetMapping(value = "/openapi.yaml", produces = "application/vnd.oai.openapi")
     @ResponseBody
     public String openapiYaml() throws JsonProcessingException {
         return Yaml.mapper().writeValueAsString(openAPI);
     }
 
-    @GetMapping(value = "/openapi.json", produces = "application/vnd.oai.openapi+json")
+    @GetMapping(value = "/openapi.json", produces = "application/json")
     @ResponseBody
     public String openapiJson() throws JsonProcessingException {
         return Json.mapper().writeValueAsString(openAPI);
+    }
+
+    @RequestMapping("/oauth/authorize")
+    public String authorize() {
+        return "forward:/api/oauth/dialog";
     }
 
 }

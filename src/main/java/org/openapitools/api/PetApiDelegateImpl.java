@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -27,8 +28,11 @@ public class PetApiDelegateImpl implements PetApiDelegate {
 
     private final PetRepository petRepository;
 
-    public PetApiDelegateImpl(PetRepository petRepository) {
+    private final NativeWebRequest request;
+
+    public PetApiDelegateImpl(PetRepository petRepository, NativeWebRequest request) {
         this.petRepository = petRepository;
+        this.request = request;
     }
 
     @PostConstruct
@@ -93,6 +97,7 @@ public class PetApiDelegateImpl implements PetApiDelegate {
 
     @Override
     public ResponseEntity<Pet> getPetById(Long petId) {
+        ApiUtil.checkApiKey(request);
         return petRepository.findById(petId)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

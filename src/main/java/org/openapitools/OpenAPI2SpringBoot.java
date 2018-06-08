@@ -15,13 +15,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class OpenAPI2SpringBoot implements CommandLineRunner {
 
     @Override
-    public void run(String... arg0) throws Exception {
+    public void run(String... arg0) {
         if (arg0.length > 0 && arg0[0].equals("exitcode")) {
             throw new ExitException();
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         new SpringApplication(OpenAPI2SpringBoot.class).run(args);
     }
 
