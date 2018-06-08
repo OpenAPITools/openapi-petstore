@@ -7,8 +7,8 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 externalDocs:
-  description: Find out more about Swagger
-  url: http://swagger.io
+  description: Find out more about OpenAPI generator
+  url: https://openapi-generator.tech
 tags:
 - name: pet
   description: Everything about your Pets
@@ -810,7 +810,7 @@ components:
       type: oauth2
       flows:
         implicit:
-          authorizationUrl: http://petstore.swagger.io/api/oauth/dialog
+          authorizationUrl: /api/oauth/dialog
           scopes:
             write:pets: modify pets in your account
             read:pets: read your pets
