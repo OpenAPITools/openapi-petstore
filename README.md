@@ -17,6 +17,16 @@ java -jar target/openapi-petstore-{VERSION}.jar
 You can view the api documentation in swagger-ui by pointing to  
 http://localhost:8080/
 
+## Docker
+
+To start the server via docker, please run the following commands:
+```sh
+docker pull openapitools/openapi-petstore
+docker run -d -e OPENAPI_BASE_PATH=/v3 -p 80:8080 openapitools/openapi-petstore
+```
+
+Ref: https://hub.docker.com/r/openapitools/openapi-petstore/
+
 ## Security
 
 ### API key
