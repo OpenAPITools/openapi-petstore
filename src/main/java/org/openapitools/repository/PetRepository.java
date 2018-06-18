@@ -20,10 +20,12 @@ public class PetRepository extends HashMapRepository<Pet, Long> {
     @Override
     public <S extends Pet> S save(S pet) {
         if (pet.getId() != null && pet.getId() > sequenceId) {
-            sequenceId = pet.getId();
+            sequenceId = pet.getId() + 1;
         }
-        pet.setId(sequenceId);
-        sequenceId += 1;
+        if (pet.getId() == null) {
+            pet.setId(sequenceId);
+            sequenceId += 1;
+        }
         return super.save(pet);
     }
 

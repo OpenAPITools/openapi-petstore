@@ -77,7 +77,7 @@ public class PetApiDelegateImpl implements PetApiDelegate {
     @Override
     public ResponseEntity<Void> deletePet(Long petId, String apiKey) {
         petRepository.deleteById(petId);
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        return ResponseEntity.ok().build();
     }
 
     @Override
