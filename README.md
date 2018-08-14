@@ -11,7 +11,7 @@ mvn spring-boot:run
 Or package it then run it as a Java application
 ```
 mvn package
-java -jar target/openapi-petstore-{VERSION}.jar
+java -jar target/openapi-petstore.jar
 ```
 
 You can view the api documentation in swagger-ui by pointing to  
