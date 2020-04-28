@@ -1,3 +1,5 @@
+NOTE: The Meeshkan build is not configured.
+
 # OpenAPI petstore
 
 This is an implementation of the OpenAPI pet store based on Spring-Boot.
