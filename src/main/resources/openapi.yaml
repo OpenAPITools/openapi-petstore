@@ -382,7 +382,8 @@ paths:
         style: simple
         explode: false
         schema:
-          type: string
+          type: integer
+          format: int64
       responses:
         400:
           description: Invalid ID supplied
@@ -598,6 +599,8 @@ components:
     Order:
       title: Pet Order
       type: object
+      required:
+        - id
       properties:
         id:
           type: integer
@@ -649,6 +652,9 @@ components:
     User:
       title: a User
       type: object
+      required:
+        - id
+        - username
       properties:
         id:
           type: integer
