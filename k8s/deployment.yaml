@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openapi-petstore-deployment
+  labels:
+    app: openapi-petstore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openapi-petstore
+  template:
+    metadata:
+      labels:
+        app: openapi-petstore
+    spec:
+      containers:
+        - name: openapi-petstore
+          image: openapitools/openapi-petstore
+          ports:
+            - containerPort: 8080
