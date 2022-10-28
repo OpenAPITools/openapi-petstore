@@ -1,4 +1,12 @@
 terraform {
+  cloud {
+    organization = "joshuayeungzuhlke"
+
+    workspaces {
+      name = "openapi-petstore-devops"
+    }
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -11,5 +19,5 @@ terraform {
     }
   }
 
-  required_version = "~> 1.2.0"
+  required_version = ">= 1.2.0"
 }
