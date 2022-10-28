@@ -97,7 +97,7 @@ Desktop.ini
 # Terraforms
 ######################
 # Local .terraform directories
-terraform/infrastructure/.terraform/*
+**/.terraform/*
 
 # .tfstate files
 *.tfstate
