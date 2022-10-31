@@ -1,14 +1,19 @@
-name: "Terraform"
+name: "Resources"
 
 on:
+  workflow_run:
+    workflows: [ "Cluster" ]
+    branches: [ main ]
+    types:
+      - completed
   push:
     branches:
       - main
   pull_request:
 
 jobs:
-  terraform:
-    name: "Terraform"
+  deploy_resources:
+    name: "Deploy Resources"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -22,23 +27,23 @@ jobs:
 
       - name: Terraform Format
         id: fmt
-        working-directory: ./terraform/infrastructure
+        working-directory: ./terraform/resources
         run: terraform fmt -check
 
       - name: Terraform Init
         id: init
-        working-directory: ./terraform/infrastructure
+        working-directory: ./terraform/resources
         run: terraform init
       
       - name: Terraform Validate
         id: validate
-        working-directory: ./terraform/infrastructure
+        working-directory: ./terraform/resources
         run: terraform validate -no-color
 
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
-        working-directory: ./terraform/infrastructure
+        working-directory: ./terraform/resources
         run: terraform plan -no-color -input=false
         continue-on-error: true
 
@@ -77,5 +82,5 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        working-directory: ./terraform/infrastructure
+        working-directory: ./terraform/resources
         run: terraform apply -auto-approve -input=false
