@@ -67,25 +67,35 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    
-    - name: Set up Java 8
-      uses: actions/setup-java@v8
+
+    - name: Setup Java
+      uses: actions/setup-java@v1
       with:
-        java-version: 8
+        java-version: '8'  
     
     - name: Build Spring Boot app
-      run: ./mvnw clean package
+      run: mvn clean install -DskipTests
+      # run: ./mvnw clean package
     
     - name: Install AWS CLI
       run: sudo apt-get install awscli
-    
-    - name: Deploy to EC2 instance
-      run: |
-        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws configure set default.region us-west-2
-        aws ec2 describe-instances --instance-ids ${{ secrets.EC2_INSTANCE_ID }}
-        scp -i ${{ secrets.EC2_SSH_KEY }} target/*.jar ec2-user@${{ secrets.EC2_INSTANCE_IP }}:/home/ec2-user/
-        ssh -i ${{ secrets.EC2_SSH_KEY }} ec2-user@${{ secrets.EC2_INSTANCE_IP }} 'sudo systemctl stop myapp.service'
-        ssh -i ${{ secrets.EC2_SSH_KEY }} ec2-user@${{ secrets.EC2_INSTANCE_IP }} 'sudo mv /home/ec2-user/*.jar /opt/myapp/myapp.jar'
-        ssh -i ${{ secrets.EC2_SSH_KEY }} ec2-user@${{ secrets.EC2_INSTANCE_IP }} 'sudo systemctl start myapp.service'
+  
+    - name: Deploy to EC2
+      uses: easingthemes/ssh-deploy@v2
+      with:
+        ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+        ssh-user: ${{ secrets.USERNAME }}
+        ssh-host: ${{ secrets.HOST_DNS }}
+        remote-path: /home/ubuntu/myapp
+        local-path: target/myapp.jar
+        args: --exclude=*.log
+    # - name: Deploy to EC2 instance
+    #   run: |
+    #     aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #     aws configure set default.region us-west-2
+    #     aws ec2 describe-instances --instance-ids ${{ secrets.EC2_INSTANCE_ID }}
+    #     scp -i ${{ secrets.EC2_SSH_KEY }} target/*.jar ec2-user@${{ secrets.EC2_INSTANCE_IP }}:/home/ec2-user/
+    #     ssh -i ${{ secrets.EC2_SSH_KEY }} ec2-user@${{ secrets.EC2_INSTANCE_IP }} 'sudo systemctl stop myapp.service'
+    #     ssh -i ${{ secrets.EC2_SSH_KEY }} ec2-user@${{ secrets.EC2_INSTANCE_IP }} 'sudo mv /home/ec2-user/*.jar /opt/myapp/myapp.jar'
+    #     ssh -i ${{ secrets.EC2_SSH_KEY }} ec2-user@${{ secrets.EC2_INSTANCE_IP }} 'sudo systemctl start myapp.service'
