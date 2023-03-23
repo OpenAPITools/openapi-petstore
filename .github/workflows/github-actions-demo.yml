@@ -58,7 +58,7 @@ name: Deploy Spring Boot app to EC2
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
