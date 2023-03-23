@@ -83,12 +83,12 @@ jobs:
     - name: Deploy to EC2
       uses: easingthemes/ssh-deploy@v2
       with:
-        ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
-        ssh-user: 'ec2-user'
-        ssh-host: ${{ secrets.HOST_DNS }}
+        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+        REMOTE_USER: 'ec2-user'
+        REMOTE_HOST: ${{ secrets.HOST_DNS }}
         remote-path: /home/ubuntu/myapp
         local-path: target/myapp.jar
-        args: --exclude=*.log
+        ARGS: --exclude=*.log
     # - name: Deploy to EC2 instance
     #   run: |
     #     aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
