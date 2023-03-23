@@ -84,7 +84,7 @@ jobs:
       uses: easingthemes/ssh-deploy@v2
       with:
         ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
-        ssh-user: ${{ secrets.USERNAME }}
+        ssh-user: 'ec2-user'
         ssh-host: ${{ secrets.HOST_DNS }}
         remote-path: /home/ubuntu/myapp
         local-path: target/myapp.jar
