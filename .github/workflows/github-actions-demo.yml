@@ -53,42 +53,43 @@
 
 
 
-name: Deploy Spring Boot app to EC2
+# name: Deploy Spring Boot app to EC2
 
-on:
-  push:
-    branches:
-      - master
+# on:
+#   push:
+#     branches:
+#       - master
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
     
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v2
 
-    - name: Setup Java
-      uses: actions/setup-java@v1
-      with:
-        java-version: '8'  
+#     - name: Setup Java
+#       uses: actions/setup-java@v1
+#       with:
+#         java-version: '8'  
     
-    - name: Build Spring Boot app
-      run: mvn clean install -DskipTests
-      # run: ./mvnw clean package
+#     - name: Build Spring Boot app
+#       run: mvn clean install -DskipTests
+#       # run: ./mvnw clean package
     
-    - name: Install AWS CLI
-      run: sudo apt-get install awscli
+#     - name: Install AWS CLI
+#       run: sudo apt-get install awscli
   
-    - name: Deploy to EC2
-      uses: easingthemes/ssh-deploy@v2
-      with:
-        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-        REMOTE_USER: 'ec2-user'
-        REMOTE_HOST: ${{ secrets.HOST_DNS }}
-        remote-path: /home/ubuntu/myapp
-        local-path: target/myapp.jar
-        ARGS: --exclude=*.log
+#     - name: Deploy to EC2
+#       uses: easingthemes/ssh-deploy@v2
+#       with:
+#         SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+#         REMOTE_USER: 'ec2-user'
+#         REMOTE_HOST: ${{ secrets.HOST_DNS }}
+#         remote-path: /home/ubuntu/myapp
+#         local-path: target/myapp.jar
+#         ARGS: --exclude=*.log
+
     # - name: Deploy to EC2 instance
     #   run: |
     #     aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -99,3 +100,34 @@ jobs:
     #     ssh -i ${{ secrets.EC2_SSH_KEY }} ec2-user@${{ secrets.EC2_INSTANCE_IP }} 'sudo systemctl stop myapp.service'
     #     ssh -i ${{ secrets.EC2_SSH_KEY }} ec2-user@${{ secrets.EC2_INSTANCE_IP }} 'sudo mv /home/ec2-user/*.jar /opt/myapp/myapp.jar'
     #     ssh -i ${{ secrets.EC2_SSH_KEY }} ec2-user@${{ secrets.EC2_INSTANCE_IP }} 'sudo systemctl start myapp.service'
+
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      
+    - name: Install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        chmod +x kubectl
+        sudo mv kubectl /usr/local/bin/
+      
+    - name: Connect to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.REMOTE_HOST }}
+        username: ${{ secrets.REMOTE_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
+        script: |
+          # Run kubectl apply command on the EC2 instance
+          kubectl apply -f petstore.yml
