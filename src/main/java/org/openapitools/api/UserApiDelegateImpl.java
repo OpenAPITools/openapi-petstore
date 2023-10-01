@@ -111,4 +111,5 @@ public class UserApiDelegateImpl implements UserApiDelegate {
                 .phone("123-456-7890")
                 .userStatus(userStatus);
     }
+
 }

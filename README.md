@@ -15,14 +15,14 @@ java -jar target/openapi-petstore-{VERSION}.jar
 ```
 
 You can view the api documentation in swagger-ui by pointing to  
-http://localhost:8080/
+http://localhost:8088/
 
 ## Docker
 
 To start the server via docker, please run the following commands:
 ```sh
 docker pull openapitools/openapi-petstore
-docker run -d -e OPENAPI_BASE_PATH=/v3 -p 80:8080 openapitools/openapi-petstore
+docker run -d -e OPENAPI_BASE_PATH=/v3 -p 80:8088 openapitools/openapi-petstore
 ```
 
 Ref: https://hub.docker.com/r/openapitools/openapi-petstore/
@@ -43,7 +43,7 @@ The default credentials are:
 ## Configuration
 
 Spring parameters in application.properties:
-* Server port : `server.port` (default=8080)
+* Server port : `server.port` (default=8088)
 * API base path : `openapi.openAPIPetstore.base-path` (default=/v3). In the docker image the base path can also be set with the `OPENAPI_BASE_PATH` environment variable.
 
 Environment variables:

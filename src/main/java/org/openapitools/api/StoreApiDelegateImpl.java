@@ -44,7 +44,6 @@ public class StoreApiDelegateImpl implements StoreApiDelegate {
         orderRepository.save(createOrder(10, 3, Order.StatusEnum.PLACED));
     }
 
-
     @Override
     public ResponseEntity<Void> deleteOrder(String orderId) {
         Order order = orderRepository.findById(Long.valueOf(orderId))
@@ -81,4 +80,5 @@ public class StoreApiDelegateImpl implements StoreApiDelegate {
                 .shipDate(OffsetDateTime.now())
                 .status(status);
     }
+
 }

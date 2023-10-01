@@ -67,7 +67,6 @@ public class PetApiDelegateImpl implements PetApiDelegate {
                 "url1", "url2" }, new String[] { "tag3", "tag4" }, Pet.StatusEnum.AVAILABLE));
     }
 
-
     @Override
     public ResponseEntity<Void> addPet(Pet pet) {
         petRepository.save(pet);

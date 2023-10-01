@@ -25,6 +25,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .anyRequest().access("#oauth2.hasScope('write:pets') and #oauth2.hasScope('read:pets')");
+                .anyRequest()
+                .access("#oauth2.hasScope('write:pets') and #oauth2.hasScope('read:pets')");
     }
+
 }
